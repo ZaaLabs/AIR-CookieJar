@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                       xmlns:s="library://ns.adobe.com/flex/spark" 
+                       xmlns:mx="library://ns.adobe.com/flex/mx">
+    
+    <fx:Script>
+        <![CDATA[
+            import com.zaalabs.air.cookies.Cookie;
+            import com.zaalabs.air.cookies.CookieStore;
+            import com.zaalabs.air.cookies.CookieURLLoader;
+            import com.zaalabs.air.cookies.CookieUtil;
+            
+            public const ECHO_URL:String = "http://demo.zaalabs.com/cookiejar/echo.php";
+            public const SET_URL:String = "http://demo.zaalabs.com/cookiejar/set.php";
+            
+            public var myCookieStore:CookieStore = new CookieStore();
+            
+            protected function onEchoClick(event:MouseEvent):void
+            {
+                // Here we're going to create our own cookie and add it to the cookie store
+                var myCookie:Cookie = new Cookie("myExampleCookie", "myCookieValue");
+                myCookieStore.addCookie(CookieUtil.getDomainFromURL(ECHO_URL), myCookie);
+                
+                var loader:CookieURLLoader = new CookieURLLoader(myCookieStore);
+                var request:URLRequest = new URLRequest(ECHO_URL);
+                loader.addEventListener(Event.COMPLETE, onLoaded);
+                loader.load(request);
+            }
+            
+            protected function onServerSetClick(event:MouseEvent):void
+            {
+                var loader:CookieURLLoader = new CookieURLLoader(myCookieStore);
+                var request:URLRequest = new URLRequest(SET_URL);
+                loader.addEventListener(Event.COMPLETE, onLoaded);
+                loader.load(request);
+            }
+            
+            protected function onLoaded(event:Event):void
+            {
+                output.appendText(" == Server Response == \n"+event.target.data+"\n"); 
+                output.appendText(myCookieStore.toString() + "\n");
+            }
+            
+        ]]>
+    </fx:Script>
+    
+    <s:HGroup x="10" y="10">
+        <s:Button label="Echo" click="onEchoClick(event)" />
+        <s:Button label="Server Set" click="onServerSetClick(event)" />
+    </s:HGroup>
+    
+    <s:TextArea id="output" left="10" right="10" top="39" bottom="10"/>
+    
+</s:WindowedApplication>
