@@ -3,8 +3,6 @@ package com.zaalabs.air.cookies
     import flash.net.URLRequestHeader;
     import flash.utils.Dictionary;
     
-    import mx.logging.ILogger;
-    
     public class CookieStore
     {
         protected var _domains:Dictionary = new Dictionary(true);
